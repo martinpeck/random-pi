@@ -18,7 +18,12 @@ def calc_square_numbers(max):
     for i in range(1, max + 1):
         print(i*i)
 
+def count_numbers(max):
+    for i in range(1, max + 1):
+        print(i)
 
+        
 # do_stuff_until_something()
+# calc_square_numbers(5)
 
-calc_square_numbers(5)
+count_numbers(1000)
