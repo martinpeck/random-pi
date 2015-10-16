@@ -7,6 +7,16 @@ from curses import wrapper
 
 sense = SenseHat()
 
+red = [255, 0, 0]
+orange = [255, 127, 0]
+yellow = [255, 255, 0]
+green = [0, 255, 0]
+blue = [0, 0, 255]
+indigo = [75, 0, 130]
+violet = [159, 0, 255]
+pink = [255, 20, 120]
+empty = [0, 0, 0]
+
 # displays a hello message on the Sense HAT's pixel display
 def hello_message(name, text_colour, back_colour=[0,0,0]):
     
@@ -164,6 +174,7 @@ def move_the_pixel_impl(stdscr):
     last_x = last_y = x = y = 0
     c = ""
     colour = [100,255,0]
+    toggle = True
     
     sense.clear()
     
@@ -183,12 +194,27 @@ def move_the_pixel_impl(stdscr):
             y = 7 if y == 0 else y-1
         elif c == curses.KEY_DOWN:
             y = 0 if y == 7 else y+1
+        elif c == ord("r"):
+            colour = red
+        elif c == ord("o"):
+            colour = orange
+        elif c == ord("y"):
+            colour = yellow
+        elif c == ord("g"):
+            colour = green
+        elif c == ord("b"):
+            colour = blue
+        elif c == ord("i"):
+            colour = indigo
+        elif c == ord("v"):
+            colour = violet
+        elif c == ord("p"):
+            colour = pink
         elif c == ord(" "):
-            colour = [random.randint(50,255),
-                      random.randint(50,255),
-                      random.randint(50,255)]
-               
-        sense.set_pixel(last_x, last_y, [0,0,0])
+            toggle = not toggle
+
+        if toggle:
+            sense.set_pixel(last_x, last_y, [0,0,0])
         
 
     sense.clear()
@@ -197,6 +223,44 @@ def move_the_pixel_impl(stdscr):
 def move_the_pixel():
     wrapper(move_the_pixel_impl)
 
+def make_a_face():
+
+    sense.clear()
+    
+    e = empty
+    p = pink
+    r = red
+    o = orange
+    g = green
+    b = blue
+    
+    pattern = [
+    e,e,e,e,e,e,e,e,
+    e,e,e,e,e,e,e,e,
+    p,p,p,e,e,p,p,p,
+    p,g,p,p,p,p,g,p,
+    p,p,p,e,e,p,p,p,
+    e,e,e,o,o,e,e,e,
+    e,r,e,e,e,e,r,e,
+    e,e,r,r,r,r,e,e,
+    ]
+
+    sense.set_pixels(pattern)
+
+    time.sleep(5)
+
+    pattern = [
+    e,e,r,e,e,r,e,e,
+    e,e,e,r,r,e,e,e,
+    p,p,p,e,e,p,p,p,
+    p,b,p,p,p,p,b,p,
+    p,p,p,e,e,p,p,p,
+    e,e,e,o,o,e,e,e,
+    e,e,e,e,e,e,e,e,
+    e,r,r,r,r,r,r,e,
+    ]
+
+    sense.set_pixels(pattern)
      
 def choose():
 
@@ -204,7 +268,9 @@ def choose():
     
     while choice != "x":   
         choice = input("Select what you want to do: ")
-        if choice == "1":
+        if choice == "0":
+            sense.clear()
+        elif choice == "1":
             greetings()
         elif choice == "2":
             letters()
@@ -218,12 +284,16 @@ def choose():
             scan_the_pixel()
         elif choice == "7":
             move_the_pixel()
+        elif choice == "8":
+            make_a_face()
+        
 
 
 def menu():
     print("")
     print("---------------------------")
     print("-                         -")
+    print("- (0) Clear               -")
     print("- (1) Greetings           -")
     print("- (2) Letters             -")
     print("- (3) Temperature         -")
@@ -231,6 +301,7 @@ def menu():
     print("- (5) Pretty              -")
     print("- (6) Scan the Pixel      -")
     print("- (7) Move the Pixel      -")
+    print("- (8) Smiley Bob          -")
     print("- (x) Exit                -")
     print("-                         -")
     print("---------------------------")
