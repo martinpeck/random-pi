@@ -15,38 +15,50 @@ blue = [0, 0, 255]
 indigo = [75, 0, 130]
 violet = [159, 0, 255]
 pink = [255, 20, 120]
+white = [255, 255, 255]
 empty = [0, 0, 0]
 
+text_colours = {"red": red,
+                "orange": orange,
+                "yellow": yellow,
+                "green": green,
+                "blue": blue,
+                "indigo": indigo,
+                "violet": violet,
+                "pink": pink,
+                "white": white}
+
+
 # displays a hello message on the Sense HAT's pixel display
-def hello_message(name, text_colour, back_colour=[0,0,0]):
+def write_message(message, text_colour=white, back_colour=[0,0,0]):
     
-    sense.show_message("Hello " + name,
-                       scroll_speed=0.05,
+    sense.show_message(message,
+                       scroll_speed=0.04,
                        text_colour=text_colour,
                        back_colour=back_colour)
 
 # causes a set of hello messages to be displayed
 def greetings():
-    hello_message("Jessica", [255,0,0])
-    hello_message("Kathy", [0,255,0])
-    hello_message("Matthew", [255,255,255]) 
-    hello_message("Martin", [0,0,255])
+    write_message("Hello Jessica", text_colour=pink)
+    write_message("Hello Kathy", text_colour=green)
+    write_message("Hello Matthew", text_colour=blue) 
+    write_message("Hello Martin", text_colour=red)
     
 # displays the letters in a word, one after another, in a random colour
 def letters():
-
-    letters = "Jessica"
     
-    for letter in letters:
-        r = random.randint(0,255)
-        g = random.randint(0,255)
-        b = random.randint(0,255)
+    message = input("message: ")
 
-        sense.show_letter(letter,text_colour=[r, g, b])
-
-        time.sleep(0.5)
+    list_of_colours = list(text_colours.values())
+    while message != "exit":
         
-    sense.clear()
+        for letter in message:
+            colour_index = random.randint(0,len(list_of_colours)-1)
+            sense.show_letter(letter, text_colour = list_of_colours[colour_index])
+            time.sleep(0.25)
+
+        sense.clear()
+        message = input("message: ")
    
 # scrolls the temperature
 def temperature():
@@ -261,13 +273,54 @@ def make_a_face():
     ]
 
     sense.set_pixels(pattern)
-     
+
+def write_messages():
+    message = ""
+    message = input("message: ")
+    tc = green
+    while message != "exit":
+        if message in text_colours:
+            tc = text_colours[message]
+            print("changed text colour to", message)
+        elif message == "colours":
+            for c in text_colours:
+                print(c)
+        else:
+            write_message(message, text_colour = tc)
+            
+        message = input("message: ")
+        
+
+def menu():
+    print("")
+    print("---------------------------")
+    print("-                         -")
+    print("- (0) Clear               -")
+    print("- (1) Greetings           -")
+    print("- (2) Letters             -")
+    print("- (3) Temperature         -")
+    print("- (4) Environment         -")
+    print("- (5) Pretty              -")
+    print("- (6) Scan the Pixel      -")
+    print("- (7) Move the Pixel      -")
+    print("- (8) Smiley Bob          -")
+    print("- (9) Messages            -")
+    print("- (x) Exit                -")
+    print("-                         -")
+    print("---------------------------")
+    print("")
+
+
 def choose():
 
     choice = ""
     
-    while choice != "x":   
+    while choice != "x":
+
+        menu()
+   
         choice = input("Select what you want to do: ")
+
         if choice == "0":
             sense.clear()
         elif choice == "1":
@@ -286,30 +339,11 @@ def choose():
             move_the_pixel()
         elif choice == "8":
             make_a_face()
-        
+        elif choice == "9":
+            write_messages()        
 
-
-def menu():
-    print("")
-    print("---------------------------")
-    print("-                         -")
-    print("- (0) Clear               -")
-    print("- (1) Greetings           -")
-    print("- (2) Letters             -")
-    print("- (3) Temperature         -")
-    print("- (4) Environment         -")
-    print("- (5) Pretty              -")
-    print("- (6) Scan the Pixel      -")
-    print("- (7) Move the Pixel      -")
-    print("- (8) Smiley Bob          -")
-    print("- (x) Exit                -")
-    print("-                         -")
-    print("---------------------------")
-    print("")
-
-    choose()
     
-menu()
+choose()
 
 
     
