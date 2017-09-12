@@ -63,12 +63,46 @@ def decode(ciphertext, key):
 	return plaintext
 
 
+def encode_decode(text, key, encode = True):
+	transformed_text = ""
+	
+	text = text.strip().upper()
+	key_cycle = cycle(key.strip().upper())
+	
+	for char in text:
+				
+		if char in ALPHABET:			
+			
+			key_char = next(key_cycle)
+			
+			location_char = ALPHABET.find(char)			
+			location_key_char = ALPHABET.find(key_char)						
+						
+			if encode:
+				tranformed_char_location = (location_char + location_key_char) % len(ALPHABET)
+			else:				
+				tranformed_char_location = (location_char - location_key_char) % len(ALPHABET)
+						
+			transformed_char = ALPHABET[tranformed_char_location]
+			
+			transformed_text += transformed_char
+				
+		else:
+			transformed_text += char
+		
+	return transformed_text
 
 plain_text = "this is a test of my super encoder and decoder"
 key = "guides"
 
 encoded = encode(plain_text, key)
 decoded = decode(encoded, key)
+
+print 'encoded: ' + encoded
+print 'decoded: ' + decoded
+
+encoded = encode_decode(plain_text, key)
+decoded = encode_decode(encoded, key, False)
 
 print 'encoded: ' + encoded
 print 'decoded: ' + decoded
