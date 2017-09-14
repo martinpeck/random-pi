@@ -92,8 +92,8 @@ def encode_decode(text, key, encode = True):
 		
 	return transformed_text
 
-plain_text = "this is a test of my super encoder and decoder"
-key = "guides"
+plain_text = raw_input("Enter text to encode: ")
+key = raw_input("Enter key to use: ")	
 
 encoded = encode(plain_text, key)
 decoded = decode(encoded, key)
